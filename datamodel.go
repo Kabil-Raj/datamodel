@@ -69,19 +69,12 @@ func SaveData(productName string, productImageUrl string, productDescription str
 	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
 	if err != nil {
 		fmt.Println(err.Error())
-	} else {
-		fmt.Println("Connected to Sql")
 	}
-
-	// select database
 	_, err = db.Exec("USE AmazonProductDatabase")
 
 	if err != nil {
 		fmt.Println(err.Error())
-	} else {
-		fmt.Println(" AmazonProductDatabase selected successfully ")
 	}
-
 	// Insert values into database
 	sqlInsertStatement, err := db.Prepare("INSERT INTO AmazonProductDetails (ProductName,ProductImageUrl,ProductDescription,ProductPrice,ProductReviews,CreatedTime) VALUES (?,?,?,?,?,?);")
 	if err != nil {
