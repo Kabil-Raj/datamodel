@@ -26,6 +26,14 @@ func ConnectMySql() {
 	}
 
 	defer db.Close()
+
+	insert, err := db.Query("INSERT INTO test VALUES ( 2, 'TEST' )")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer insert.Close()
 }
 
 func Sample(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
