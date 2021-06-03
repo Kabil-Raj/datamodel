@@ -18,7 +18,7 @@ type ProductDetail struct {
 
 func ConnectMySql() {
 	fmt.Println("Connecting MySql")
-
+	// Connect MySql
 	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
 
 	if err != nil {
@@ -27,7 +27,8 @@ func ConnectMySql() {
 		fmt.Println("Connected to Sql")
 	}
 
-	_, err = db.Exec("CREATE DATABASE AmazonProductDetailsDatabase")
+	// Create Database
+	_, err = db.Exec("CREATE DATABASE AmazonProductDatabase")
 
 	if err != nil {
 		fmt.Println(err.Error())
@@ -35,12 +36,23 @@ func ConnectMySql() {
 		fmt.Println(" Database created successfully ")
 	}
 
-	sqlStatement, err := db.Prepare("CREATE Table AmazonProductDetails(id int NOT NULL AUTO_INCREMENT, ProductName, ProductImageUrl, ProductDescription, ProductPrice, ProductReviews,CreatedTime,PRIMARY KEY (id));")
+	// Choose Database
+	_, err = db.Exec("USE AmazonProductDatabase")
+
+	if err != nil {
+		fmt.Println(err.Error())
+	} else {
+		fmt.Println(" AmazonProductDatabase selected successfully ")
+	}
+
+	// Table Creation Query
+	sqlStatement, err := db.Prepare("CREATE Table AmazonProductDetails(id int NOT NULL AUTO_INCREMENT, ProductName varchar(255), ProductImageUrl varchar(255), ProductDescription varchar(10000), ProductPrice varchar(255), ProductReviews varchar(255),CreatedTime DATETIME,PRIMARY KEY (id));")
 
 	if err != nil {
 		fmt.Println(err.Error())
 	}
 
+	// Table Execution Query
 	_, err = sqlStatement.Exec()
 	if err != nil {
 		fmt.Println(err.Error())
@@ -62,21 +74,23 @@ func SaveData(productName string, productImageUrl string, productDescription str
 	}
 
 	// select database
-	_, err = db.Exec("USE AmazonProductDetailsDatabase")
+	_, err = db.Exec("USE AmazonProductDatabase")
 
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
-		fmt.Println(" testDB selected successfully ")
+		fmt.Println(" AmazonProductDatabase selected successfully ")
 	}
 
 	// Insert values into database
-	sqlInsertStatement, err := db.Prepare("INSERT INTO employee (ProductName, ProductImageUrl, ProductDescription, ProductPrice, ProductReviews,CreatedTime) VALUES (productName,ProductImageUrl,productDescription,productPrice, productReviews,createdTime);")
+	sqlInsertStatement, err := db.Prepare("INSERT INTO AmazonProductDetails (ProductName,ProductImageUrl,ProductDescription,ProductPrice,ProductReviews,CreatedTime) VALUES (?,?,?,?,?,?);")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	_, err = sqlInsertStatement.Exec()
+	_, err = sqlInsertStatement.Exec(productName, productImageUrl, productDescription, productPrice, productReviews, createdTime)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
+
+	defer db.Close()
 }
