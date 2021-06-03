@@ -14,6 +14,6 @@ type ProductDetail struct {
 	CreatedAt          time.Time `json:"CreatedAt"`
 }
 
-func Sample(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
+func Sample (productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
 	fmt.Println(" ", productName, " ", productImageUrl, " ", createdTime)
 }
