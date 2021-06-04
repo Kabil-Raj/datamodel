@@ -21,13 +21,13 @@ COPY . .
 RUN go build -o main .
 
 # Move to /dist directory as the place for resulting binary folder
-WORKDIR /dist
+WORKDIR /scrapper
 
 # Copy binary from build to main folder
-RUN cp /build/main .
+RUN cp /build/data .
 
 # Export necessary port
 EXPOSE 3000
 
 # Command to run when starting the container
-CMD ["/dist/main"]
+CMD ["/scrapper/data"]
