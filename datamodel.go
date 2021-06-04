@@ -1,12 +1,31 @@
-package datamodel
+package main
 
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"net/http"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/gorilla/mux"
 )
+
+func handleRequests() {
+	myRouter := mux.NewRouter().StrictSlash(true)
+	myRouter.HandleFunc("/scrapproduct", productScrappedData).Methods("POST")
+	log.Fatal(http.ListenAndServe(":10001", myRouter))
+}
+
+func productScrappedData(w http.ResponseWriter, req *http.Request) {
+	getData := req.URL.Query().Get("data")
+	fmt.Println(getData)
+}
+
+func main() {
+	handleRequests()
+	ConnectMySql()
+}
 
 func ConnectMySql() {
 	fmt.Println("Connecting MySql")
