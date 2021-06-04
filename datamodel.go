@@ -3,18 +3,10 @@ package datamodel
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"time"
-)
 
-type ProductDetail struct {
-	ProductName        string    `json:"ProductName"`
-	ProductImageUrl    string    `json:"ProductImageUrl"`
-	ProductDescription string    `json:"ProductDescription"`
-	ProductPrice       string    `json:"ProductPrice"`
-	ProductReviews     string    `json:"ProductReviews"`
-	CreatedAt          time.Time `json:"CreatedAt"`
-}
+	_ "github.com/go-sql-driver/mysql"
+)
 
 func ConnectMySql() {
 	fmt.Println("Connecting MySql")
