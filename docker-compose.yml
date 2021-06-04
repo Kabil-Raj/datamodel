@@ -1,0 +1,86 @@
+version: "3.7"
+services:
+  database:
+    image: mysql:5.7
+    restart: always
+    env_file:
+       - .env
+    ports:
+      - "3200:3200"
+    volumes:
+      - data:/var/lib/mysql/data
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file: .env
+    depends_on:
+      - database
+    networks:
+      - default
+    ports:
+    - "8080:8080"
+volumes:
+  data:
+
+
+
+
+# version: '3.3'
+# services:
+#   app:
+#     container_name: productdatamodel_app
+#     build: .
+#     ports: 
+#       - 8080:8080 
+#     restart: on-failure
+#     volumes:
+#       - api:/usr/src/app/
+#     depends_on:
+#       - productdatamodel-mysql           # Uncomment this when using mysql.
+#     networks:
+#       - productdatamodel
+
+
+
+  
+# productdatamodel-mysql:
+#     image: mysql:5.7
+#     container_name: db_mysql
+#     ports: 
+#       - 3306:3306
+#     environment: 
+#       - MYSQL_ROOT_HOST=${DB_HOST} 
+#       - MYSQL_USER=${DB_USER}
+#       - MYSQL_PASSWORD=${DB_PASSWORD}
+#       - MYSQL_DATABASE=${DB_NAME}
+#       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+#     volumes:
+#       - database_mysql:/var/lib/mysql
+#     networks:
+#       - productdatamodel
+  
+# phpmyadmin:
+#     image: phpmyadmin/phpmyadmin
+#     container_name: phpmyadmin_container
+#     depends_on:
+#       - productdatamodel-mysql
+#     environment:
+#       - PMA_HOST=mysql 
+#       - PMA_USER=${DB_USER}
+#       - PMA_PORT=${DB_PORT}
+#       - PMA_PASSWORD=${DB_PASSWORD}
+#     ports:
+#       - 9090:80
+#     restart: always
+#     networks:
+#       - productdatamodel
+
+
+# volumes:
+#   api:
+#   database_mysql:                   
+
+# networks:
+#   productdatamodel:
+#     driver: bridge

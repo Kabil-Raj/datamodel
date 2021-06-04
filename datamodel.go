@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -32,15 +33,21 @@ func main() {
 }
 
 func connectMySql() {
-	fmt.Println("Connecting MySql")
+
+	HOST := os.Getenv("MYSQL_HOST")
+	fmt.Println(HOST)
 	// Connect MySql
-	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
+	DBURL := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_ROOT_PASSWORD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DATABASE"))
+	fmt.Println(DBURL)
+	db, err := sql.Open("mysql", DBURL)
 
 	if err != nil {
 		fmt.Println(err.Error())
 	} else {
 		fmt.Println("Connected to Sql")
 	}
+
+	fmt.Println(db.Ping())
 
 	// Create Database
 	_, err = db.Exec("CREATE DATABASE AmazonProductDatabase")
@@ -81,7 +88,7 @@ func connectMySql() {
 
 func saveDataInDatabase(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
 	// Connecting to database
-	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
+	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(localhost:3306)/")
 	if err != nil {
 		fmt.Println(err.Error())
 	}
