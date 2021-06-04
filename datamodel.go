@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -13,21 +14,24 @@ import (
 
 func handleRequests() {
 	myRouter := mux.NewRouter().StrictSlash(true)
-	myRouter.HandleFunc("/scrapproduct", productScrappedData).Methods("POST")
+	myRouter.HandleFunc("/scrapData", productScrappedData).Methods("POST")
 	log.Fatal(http.ListenAndServe(":10001", myRouter))
 }
 
 func productScrappedData(w http.ResponseWriter, req *http.Request) {
-	getData := req.URL.Query().Get("data")
-	fmt.Println(getData)
+	var result map[string]string
+	json.NewDecoder(req.Body).Decode(&result)
+	fmt.Println(result["ProductName"])
+	saveDataInDatabase(result["ProductName"], result["ProductImageUrl"], result["ProductDescription"], result["ProductPrice"], result["ProductReviews"], time.Now())
+
 }
 
 func main() {
+	connectMySql()
 	handleRequests()
-	ConnectMySql()
 }
 
-func ConnectMySql() {
+func connectMySql() {
 	fmt.Println("Connecting MySql")
 	// Connect MySql
 	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
@@ -75,7 +79,7 @@ func ConnectMySql() {
 
 }
 
-func SaveData(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
+func saveDataInDatabase(productName string, productImageUrl string, productDescription string, productPrice string, productReviews string, createdTime time.Time) {
 	// Connecting to database
 	db, err := sql.Open("mysql", "root:Electronic1702!@tcp(127.0.0.1:3306)/")
 	if err != nil {
