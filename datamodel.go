@@ -20,10 +20,10 @@ func handleRequests() {
 }
 
 func productScrappedData(w http.ResponseWriter, req *http.Request) {
+	fmt.Println(("checking.."))
 	var result map[string]string
 	json.NewDecoder(req.Body).Decode(&result)
 	saveDataInDatabase(result["ProductName"], result["ProductImageUrl"], result["ProductDescription"], result["ProductPrice"], result["ProductReviews"], time.Now())
-
 }
 
 func main() {
@@ -101,8 +101,12 @@ func saveDataInDatabase(productName string, productImageUrl string, productDescr
 	// Insert values into database
 	sqlInsertStatement, err := db.Prepare("INSERT INTO AmazonProductDetails (ProductName,ProductImageUrl,ProductDescription,ProductPrice,ProductReviews,CreatedTime) VALUES (?,?,?,?,?,?);")
 	if err != nil {
+		fmt.Println("error")
 		fmt.Println(err.Error())
 	}
+
+	fmt.Sprintln(productName, productImageUrl, productDescription, productPrice, productReviews)
+
 	_, err = sqlInsertStatement.Exec(productName, productImageUrl, productDescription, productPrice, productReviews, createdTime)
 	if err != nil {
 		fmt.Println(err.Error())
